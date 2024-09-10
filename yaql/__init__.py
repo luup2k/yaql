@@ -12,8 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import os.path
-import pkg_resources
+import importlib.metadata
 
 from yaql.language import contexts
 from yaql.language import conventions
@@ -40,13 +39,8 @@ _default_context = None
 
 def detect_version():
     try:
-        dist = pkg_resources.get_distribution('yaql')
-        location = os.path.normcase(dist.location)
-        this_location = os.path.normcase(__file__)
-        if not this_location.startswith(os.path.join(location, 'yaql')):
-            raise pkg_resources.DistributionNotFound()
-        return dist.version
-    except pkg_resources.DistributionNotFound:
+        return importlib.metadata.version('yaql')
+    except importlib.metadata.PackageNotFoundError:
         return 'Undefined (package was not installed with setuptools)'
 
 
